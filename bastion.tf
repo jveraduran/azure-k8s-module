@@ -1,12 +1,12 @@
 resource "azurerm_public_ip" "bastion" {
-  name                         = "${var.cluster_name}-${var.environment}-${var.name_suffix}-bastion"
+  name                         = "${var.cluster-name}-${var.environment}-${var.name-suffix}-bastion"
   location                     = "${data.azurerm_resource_group.main.location}"
   resource_group_name          = "${data.azurerm_resource_group.main.name}"
   public_ip_address_allocation = "static"
 }
 
 resource "azurerm_network_security_group" "bastion" {
-  name                = "${var.cluster_name}-${var.environment}-${var.name_suffix}-bastion"
+  name                = "${var.cluster-name}-${var.environment}-${var.name-suffix}-bastion"
   location            = "${data.azurerm_resource_group.main.location}"
   resource_group_name = "${data.azurerm_resource_group.main.name}"
 }
@@ -26,13 +26,13 @@ resource "azurerm_network_security_rule" "ssh" {
 }
 
 resource "azurerm_network_interface" "bastion" {
-  name                      = "${var.cluster_name}-${var.environment}-${var.name_suffix}-bastion"
+  name                      = "${var.cluster-name}-${var.environment}-${var.name-suffix}-bastion"
   location                  = "${data.azurerm_resource_group.main.location}"
   resource_group_name       = "${data.azurerm_resource_group.main.name}"
   network_security_group_id = "${azurerm_network_security_group.bastion.id}"
 
   ip_configuration {
-    name                          = "${var.cluster_name}-${var.environment}-${var.name_suffix}-bastion"
+    name                          = "${var.cluster-name}-${var.environment}-${var.name-suffix}-bastion"
     subnet_id                     = "${data.azurerm_subnet.subnet.id}"
     private_ip_address_allocation = "dynamic"
     public_ip_address_id          = "${azurerm_public_ip.bastion.id}"
@@ -40,11 +40,11 @@ resource "azurerm_network_interface" "bastion" {
 }
 
 resource "azurerm_virtual_machine" "bastion" {
-  name                             = "${var.cluster_name}-${var.environment}-${var.name_suffix}-bastion"
+  name                             = "${var.cluster-name}-${var.environment}-${var.name-suffix}-bastion"
   location                         = "${data.azurerm_resource_group.main.location}"
   resource_group_name              = "${data.azurerm_resource_group.main.name}"
   network_interface_ids            = ["${azurerm_network_interface.bastion.id}"]
-  vm_size                          = "Standard_DS1_v2"
+  vm_size                          = "${var.bastion-vm-size}"
   delete_os_disk_on_termination    = true
   delete_data_disks_on_termination = true
 
@@ -53,14 +53,14 @@ resource "azurerm_virtual_machine" "bastion" {
   }
 
   storage_os_disk {
-    name              = "${var.cluster_name}-${var.environment}-${var.name_suffix}-bastion"
+    name              = "${var.cluster-name}-${var.environment}-${var.name-suffix}-bastion"
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Standard_LRS"
   }
 
   os_profile {
-    computer_name  = "${var.cluster_name}-${var.environment}-bastion"
+    computer_name  = "${var.cluster-name}-${var.environment}-bastion"
     admin_username = "ubuntu"
     admin_password = "ef208a6b-a6b0-47f0-be8f-2d2bd2e640ba"
   }
@@ -70,18 +70,7 @@ resource "azurerm_virtual_machine" "bastion" {
 
     ssh_keys {
       path     = "/home/ubuntu/.ssh/authorized_keys"
-      key_data = "${var.ssh_public_key}"
+      key_data = "${var.ssh-public-key}"
     }
   }
-
-  tags = "${merge(var.default_tags, map(
-    "applicationname", "Walmart(Converted to EA)",
-    "costcenter", "${var.tag-costcenter}",
-    "deploymenttype","Terraform",
-    "environmentinfo","${var.environment}",
-    "notificationdistlist","CL_THE_10TH_MAN <WM10THMAN@email.wal-mart.com>",
-    "ownerinfo","${var.tag-ownerinfo}",
-    "cluster", "${var.cluster_name}-${var.environment}-${var.name_suffix}",
-    "sponsorinfo", "${var.tag-sponsorinfo}"
-    ))}"
 }

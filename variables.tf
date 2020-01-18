@@ -1,8 +1,8 @@
-variable "name_suffix" {
+variable "name-suffix" {
   type = "string"
 }
 
-variable "cluster_name" {
+variable "cluster-name" {
   type    = "string"
 }
 
@@ -10,57 +10,51 @@ variable "environment" {
   type    = "string"
 }
 
-variable "main_resource_group" {
+variable "main-resource-group" {
   type = "string"
 }
 
-variable "images_resource_group" {
+variable "images-resource-group" {
   type = "string"
 }
-variable "vnet_name" {
-  type = "string"
-}
-
-variable "subnet_name" {
+variable "vnet-name" {
   type = "string"
 }
 
-variable "k8s_image_name" {
+variable "subnet-name" {
   type = "string"
 }
 
-variable "bastion_image_name" {
+variable "k8s-image-name" {
   type = "string"
 }
 
-variable "ssh_public_key" {
+variable "bastion-image-name" {
   type = "string"
 }
-variable "worker_count" {
+
+variable "ssh-public-key" {
+  type = "string"
+}
+variable "worker-count" {
   type    = "string"
 }
-variable "manager_count" {
-  type    = "string"
-}
-
-variable "worker_vm_size" {
+variable "manager-count" {
   type    = "string"
 }
 
-variable "manager_vm_size" {
+variable "worker-vm-size" {
   type    = "string"
 }
 
-variable "lb_address_pool_id" {
-  type = "string"
+variable "manager-vm-size" {
+  type    = "string"
 }
 
-variable "tag-costcenter" {
-  type = "string"
+variable "bastion-vm-size" {
+  type    = "string"
 }
-variable "tag-ownerinfo" {
-  type = "string"
-}
-variable "tag-sponsorinfo" {
+
+variable "lb-address-pool-id" {
   type = "string"
 }
