@@ -22,8 +22,7 @@ resource "azurerm_network_interface" "manager" {
   name                      = "${var.cluster-name}-${var.environment}-${var.name-suffix}-${format("manager%d", count.index + 1)}"
   location                  = "${data.azurerm_resource_group.main.location}"
   resource_group_name       = "${data.azurerm_resource_group.main.name}"
-  network_security_group_id = "${azurerm_network_security_group.managers.id}"
-  internal_dns_name_label   = "${var.cluster-name}-${var.environment}-${var.name-suffix}-${format("manager%d", count.index + 1)}.walmartretail.cl" 
+  network_security_group_id = "${azurerm_network_security_group.managers.id}" 
 
   ip_configuration {
     name                          = "${var.cluster-name}-${var.environment}-${var.name-suffix}-${format("manager%d", count.index + 1)}"
