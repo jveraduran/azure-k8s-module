@@ -2,8 +2,9 @@ resource "azurerm_network_security_group" "managers" {
   name                = "${var.cluster-name}-${var.environment}-${var.name-suffix}-manager"
   location            = "${data.azurerm_resource_group.main.location}"
   resource_group_name = "${data.azurerm_resource_group.main.name}"
+}
 
-  security_rule {
+resource "azurerm_network_security_rule" "ssh-managers" {
     name                       = "AllowKubernetesInbound"
     priority                   = 106
     direction                  = "Inbound"
@@ -13,7 +14,8 @@ resource "azurerm_network_security_group" "managers" {
     destination_port_range     = "30000-32767"
     source_address_prefix      = "*"
     destination_address_prefix = "*"
-  }
+    resource_group_name         = "${data.azurerm_resource_group.main.name}"
+    network_security_group_name = "${azurerm_network_security_group.managers.name}"
 }
 resource "azurerm_network_interface" "manager" {
   count                     = "${var.manager-count}"

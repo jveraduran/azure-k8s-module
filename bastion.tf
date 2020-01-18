@@ -11,7 +11,7 @@ resource "azurerm_network_security_group" "bastion" {
   resource_group_name = "${data.azurerm_resource_group.main.name}"
 }
 
-resource "azurerm_network_security_rule" "ssh" {
+resource "azurerm_network_security_rule" "ssh-bastion" {
   name                        = "ssh"
   priority                    = 150
   direction                   = "Inbound"
